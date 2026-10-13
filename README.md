@@ -36,6 +36,17 @@ Open [http://localhost:3000](http://localhost:3000).
 | `npm run typecheck` | Type-check with TypeScript |
 | `npm run format` | Format all files with Prettier |
 
+## Database
+
+SQL migrations live in `supabase/migrations`. Run each new file once, in order, in
+Supabase → **SQL Editor** → **New query** → paste → **Run**.
+
+| Migration | What it adds |
+| --- | --- |
+| `0001_profiles_and_categories.sql` | `profiles` and `categories` tables, Row Level Security, and a sign-up trigger that creates the profile and default categories |
+
+TypeScript types for the tables are in `src/types/database.ts`.
+
 ## Supabase clients
 
 | File | Use it in |
