@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Wallet } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -16,9 +17,11 @@ export default function Home() {
         </p>
       </div>
       <div className="flex gap-3">
-        <Button size="lg">Get started</Button>
-        <Button size="lg" variant="outline">
-          Learn more
+        <Button size="lg" asChild>
+          <Link href="/signup">Get started</Link>
+        </Button>
+        <Button size="lg" variant="outline" asChild>
+          <Link href="/login">Log in</Link>
         </Button>
       </div>
     </main>
