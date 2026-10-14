@@ -44,6 +44,7 @@ Supabase → **SQL Editor** → **New query** → paste → **Run**.
 | Migration | What it adds |
 | --- | --- |
 | `0001_profiles_and_categories.sql` | `profiles` and `categories` tables, Row Level Security, and a sign-up trigger that creates the profile and default categories |
+| `0002_transactions.sql` | `transactions` table (income and expenses) with RLS and a check that the category is yours and matches the type |
 
 TypeScript types for the tables are in `src/types/database.ts`.
 
