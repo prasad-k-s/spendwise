@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowDownRight, ArrowRight, ArrowUpRight, Wallet } from "lucide-react";
 
+import { LinkPending } from "@/components/link-pending";
 import {
   TRANSACTION_LIST_SELECT,
   TransactionList,
@@ -87,6 +88,7 @@ export default async function DashboardPage() {
           <Button variant="ghost" size="sm" asChild>
             <Link href="/transactions">
               View all <ArrowRight />
+              <LinkPending className="-ml-1" />
             </Link>
           </Button>
         </CardHeader>
