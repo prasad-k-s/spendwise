@@ -45,7 +45,7 @@ export default async function DashboardPage() {
         </CardHeader>
         <CardContent>
           <div className="text-muted-foreground rounded-lg border border-dashed p-10 text-center text-sm">
-            No transactions yet. Adding transactions is coming soon.
+            No transactions yet. Add one from the Transactions page.
           </div>
         </CardContent>
       </Card>
