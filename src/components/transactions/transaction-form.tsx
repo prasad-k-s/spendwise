@@ -3,7 +3,11 @@
 import { useActionState, useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 
-import { createTransaction, type TransactionFormState } from "@/app/(app)/transactions/actions";
+import {
+  createTransaction,
+  updateTransaction,
+  type TransactionFormState,
+} from "@/app/(app)/transactions/actions";
 import { FieldError } from "@/components/auth/field-error";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,24 +16,38 @@ import { NativeSelect } from "@/components/ui/native-select";
 import { todayLocal } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { PAYMENT_METHODS } from "@/lib/validations/transaction";
-import type { Category, CategoryType } from "@/types/database";
+import type { Category, CategoryType, Transaction } from "@/types/database";
 
 const initialState: TransactionFormState = {};
 
+export type EditableTransaction = Pick<
+  Transaction,
+  "id" | "type" | "amount" | "category_id" | "occurred_on" | "payment_method" | "note"
+>;
+
 type Props = {
   categories: Pick<Category, "id" | "name" | "type">[];
+  /** Pass a transaction to edit it; leave out to add a new one. */
+  transaction?: EditableTransaction;
   onSuccess?: () => void;
   onCancel?: () => void;
 };
 
-export function TransactionForm({ categories, onSuccess, onCancel }: Props) {
-  const [state, formAction, isPending] = useActionState(createTransaction, initialState);
-  const [type, setType] = useState<CategoryType>("expense");
-  const [categoryId, setCategoryId] = useState("");
+export function TransactionForm({ categories, transaction, onSuccess, onCancel }: Props) {
+  const action = transaction ? updateTransaction.bind(null, transaction.id) : createTransaction;
+  const [state, formAction, isPending] = useActionState(action, initialState);
+  const [type, setType] = useState<CategoryType>(transaction?.type ?? "expense");
+  const [categoryId, setCategoryId] = useState(transaction?.category_id ?? "");
   const [today] = useState(todayLocal);
 
   const errors = state.fieldErrors;
-  const values = state.values;
+  // After an error, show what the user typed; otherwise start from the transaction being edited.
+  const values = state.values ?? {
+    amount: transaction ? String(transaction.amount) : undefined,
+    occurredOn: transaction?.occurred_on,
+    paymentMethod: transaction?.payment_method,
+    note: transaction?.note ?? undefined,
+  };
   const options = categories.filter((c) => c.type === type);
 
   useEffect(() => {
@@ -175,7 +193,7 @@ export function TransactionForm({ categories, onSuccess, onCancel }: Props) {
         )}
         <Button type="submit" disabled={isPending}>
           {isPending && <Loader2 className="animate-spin" />}
-          Save {type}
+          {transaction ? "Save changes" : `Save ${type}`}
         </Button>
       </div>
     </form>
