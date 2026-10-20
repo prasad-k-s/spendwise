@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { LinkPending } from "@/components/link-pending";
 import { mainNav, secondaryNav, type NavItem } from "@/config/nav";
 import { cn } from "@/lib/utils";
 
@@ -38,6 +39,7 @@ function NavLink({ item, onNavigate }: { item: NavItem; onNavigate?: () => void 
     >
       <Icon className="size-4" />
       {item.title}
+      <LinkPending className="ml-auto" />
     </Link>
   );
 }
