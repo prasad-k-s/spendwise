@@ -21,3 +21,29 @@ export function todayLocal() {
   const day = String(now.getDate()).padStart(2, "0");
   return `${now.getFullYear()}-${month}-${day}`;
 }
+
+/** The app's timezone, used on the server to decide what "this month" means. */
+export const APP_TIMEZONE = "Asia/Kolkata";
+
+/**
+ * First day of the current month and first day of next month, as "YYYY-MM-DD",
+ * in the app's timezone. Use as: occurred_on >= start AND occurred_on < end.
+ */
+export function currentMonthRange(timeZone = APP_TIMEZONE) {
+  const parts = new Intl.DateTimeFormat("en-CA", { timeZone, year: "numeric", month: "2-digit" })
+    .formatToParts(new Date());
+  const year = Number(parts.find((p) => p.type === "year")!.value);
+  const month = Number(parts.find((p) => p.type === "month")!.value); // 1–12
+
+  const pad = (n: number) => String(n).padStart(2, "0");
+  const nextYear = month === 12 ? year + 1 : year;
+  const nextMonth = month === 12 ? 1 : month + 1;
+
+  return {
+    start: `${year}-${pad(month)}-01`,
+    end: `${nextYear}-${pad(nextMonth)}-01`,
+    label: new Intl.DateTimeFormat("en-IN", { month: "long", year: "numeric", timeZone }).format(
+      new Date(),
+    ),
+  };
+}
