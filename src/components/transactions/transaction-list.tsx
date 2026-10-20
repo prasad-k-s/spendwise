@@ -1,4 +1,5 @@
 import { CategoryIcon } from "@/components/categories/category-icon";
+import { TransactionRowActions } from "@/components/transactions/transaction-row-actions";
 import { formatCurrency, formatDate } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { PAYMENT_METHODS } from "@/lib/validations/transaction";
@@ -6,7 +7,7 @@ import type { Category, Transaction } from "@/types/database";
 
 export type TransactionWithCategory = Pick<
   Transaction,
-  "id" | "type" | "amount" | "occurred_on" | "note" | "payment_method"
+  "id" | "type" | "amount" | "category_id" | "occurred_on" | "note" | "payment_method"
 > & {
   category: Pick<Category, "name" | "icon" | "color"> | null;
 };
@@ -22,12 +23,19 @@ function groupByDate(transactions: TransactionWithCategory[]) {
   return [...groups.entries()];
 }
 
+/** Columns to select from Supabase for this list. */
+export const TRANSACTION_LIST_SELECT =
+  "id, type, amount, category_id, occurred_on, note, payment_method, category:categories(name, icon, color)" as const;
+
 export function TransactionList({
   transactions,
   currency,
+  categories,
 }: {
   transactions: TransactionWithCategory[];
   currency: string;
+  /** Pass the user's categories to show Edit/Delete on each row. Leave out for a read-only list. */
+  categories?: Pick<Category, "id" | "name" | "type">[];
 }) {
   return (
     <div className="grid gap-6">
@@ -36,7 +44,7 @@ export function TransactionList({
           <h2 className="text-muted-foreground mb-2 text-sm font-medium">{formatDate(date)}</h2>
           <ul className="bg-card divide-y rounded-xl border">
             {items.map((t) => (
-              <li key={t.id} className="flex items-center gap-3 px-4 py-3">
+              <li key={t.id} className={cn("flex items-center gap-3 py-3 pl-4", categories ? "pr-2" : "pr-4")}>
                 <CategoryIcon icon={t.category?.icon} color={t.category?.color} />
                 <div className="min-w-0 flex-1">
                   <p className="truncate font-medium">{t.category?.name ?? "Uncategorized"}</p>
@@ -53,6 +61,14 @@ export function TransactionList({
                   {t.type === "income" ? "+" : "−"}
                   {formatCurrency(t.amount, currency)}
                 </p>
+                {categories && (
+                  <TransactionRowActions
+                    transaction={t}
+                    label={t.category?.name ?? "Uncategorized"}
+                    currency={currency}
+                    categories={categories}
+                  />
+                )}
               </li>
             ))}
           </ul>

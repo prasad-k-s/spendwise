@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import { ArrowLeftRight } from "lucide-react";
 
 import { AddTransactionDialog } from "@/components/transactions/add-transaction-dialog";
-import { TransactionList } from "@/components/transactions/transaction-list";
+import {
+  TRANSACTION_LIST_SELECT,
+  TransactionList,
+} from "@/components/transactions/transaction-list";
 import { requireUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 
@@ -17,7 +20,7 @@ export default async function TransactionsPage() {
     supabase.from("categories").select("id, name, type").order("name"),
     supabase
       .from("transactions")
-      .select("id, type, amount, occurred_on, note, payment_method, category:categories(name, icon, color)")
+      .select(TRANSACTION_LIST_SELECT)
       .order("occurred_on", { ascending: false })
       .order("created_at", { ascending: false })
       .limit(50),
@@ -40,7 +43,11 @@ export default async function TransactionsPage() {
           Couldn&apos;t load your transactions. Please refresh the page.
         </p>
       ) : transactions && transactions.length > 0 ? (
-        <TransactionList transactions={transactions} currency={profile?.currency ?? "INR"} />
+        <TransactionList
+          transactions={transactions}
+          currency={profile?.currency ?? "INR"}
+          categories={categories ?? []}
+        />
       ) : (
         <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed px-6 py-16 text-center">
           <span className="bg-muted text-muted-foreground flex size-12 items-center justify-center rounded-full">
