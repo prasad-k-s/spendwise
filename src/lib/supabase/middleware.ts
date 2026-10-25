@@ -6,7 +6,15 @@ import type { Database } from "@/types/database";
 import { getSupabaseEnv } from "./env";
 
 /** Pages that need a signed-in user. Everything under these paths is protected. */
-const PROTECTED_PATHS = ["/dashboard", "/transactions", "/categories", "/groups", "/budgets", "/settings"];
+const PROTECTED_PATHS = [
+  "/dashboard",
+  "/transactions",
+  "/categories",
+  "/groups",
+  "/invite",
+  "/budgets",
+  "/settings",
+];
 
 /** Pages signed-in users don't need (they get sent to the dashboard). */
 const AUTH_PATHS = ["/login", "/signup"];
