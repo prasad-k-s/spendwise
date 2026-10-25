@@ -12,15 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-function initials(name: string) {
-  return name
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part[0]!.toUpperCase())
-    .join("");
-}
+import { initials } from "@/lib/initials";
 
 export function UserMenu({ name, email }: { name: string; email: string }) {
   return (
@@ -28,7 +20,7 @@ export function UserMenu({ name, email }: { name: string; email: string }) {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="h-9 gap-2 px-1.5" aria-label="Open account menu">
           <span className="bg-primary text-primary-foreground flex size-7 items-center justify-center rounded-full text-xs font-semibold">
-            {initials(name) || "?"}
+            {initials(name)}
           </span>
           <span className="hidden max-w-32 truncate text-sm font-medium sm:inline">{name}</span>
         </Button>

@@ -20,7 +20,7 @@ export const mainNav: NavItem[] = [
   { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { title: "Transactions", href: "/transactions", icon: ArrowLeftRight },
   { title: "Categories", href: "/categories", icon: Tags, comingSoon: true },
-  { title: "Groups", href: "/groups", icon: Users, comingSoon: true },
+  { title: "Groups", href: "/groups", icon: Users },
   { title: "Budgets", href: "/budgets", icon: PiggyBank, comingSoon: true },
 ];
 
